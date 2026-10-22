@@ -44,6 +44,14 @@ class CurriculumStage(BaseModel):
         description="Goal tolerance radius",
         alias="task.episode.goto_pose.tolerance.radius",
     )
+    tm_obstacles: str | None = Field(
+        default=None,
+        description="Obstacle task mode the stage switches to (e.g. random, scenario), applied at the next episode reset",
+    )
+    tm_robots: str | None = Field(
+        default=None,
+        description="Robot task mode the stage switches to (e.g. random, scenario), applied at the next episode reset",
+    )
 
     @model_validator(mode="before")
     @classmethod
@@ -122,6 +130,16 @@ class StagedCfg(BaseModel):
         """Validate starting_stage is within curriculum_definition bounds."""
         if self.curriculum_definition and self.starting_stage >= len(self.curriculum_definition):
             raise ValueError(f"starting_stage ({self.starting_stage}) must be less than number of curriculum stages ({len(self.curriculum_definition)})")
+        return self
+
+    @model_validator(mode="after")
+    def validate_task_modes_on_every_stage(self) -> Self:
+        """Validate a task mode set on one stage is set on every stage."""
+        # the curriculum callbacks transpose the stages into one list per key, which must cover every stage
+        for key in ("tm_obstacles", "tm_robots"):
+            missing = [i for i, stage in enumerate(self.curriculum_definition) if getattr(stage, key) is None]
+            if missing and len(missing) < len(self.curriculum_definition):
+                raise ValueError(f"{key} is set on some curriculum stages but not on stages {missing}, set it on every stage")
         return self
 
     @model_validator(mode="after")

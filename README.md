@@ -67,6 +67,8 @@ Gym steps are paced on the sim clock at `arena_cfg.general.control_hz`. With `ar
 
 `agent_config.action_chunk: H` (SB3 only) makes the policy emit H commands per decision, run one per control tick by `VecActionChunk`. `total_timesteps`, `eval_freq` and `max_num_moves_per_eps` stay in control ticks, PPO discounts with gamma^H and gae_lambda^H per decision, and an env whose episode ends inside a chunk idles for the rest of it. The inference node plays a chunk out the same way. `agent_config.mirror: canonical | random` reflects observations and commands across the robot's forward axis (nearest pedestrian on the left, or whole episodes with probability one half). `arena_cfg.general.env_seed` gives env i the episode seed stream `run_seed:=<env_seed>-<i>`, and `arena_cfg.general.env_launch_args` gives env i entry i (cycled) of a list of extra launch args, such as its world or pedestrian driver.
 
+`arena_cfg.task.staged.stage_ticks` starts curriculum stage i at a fixed control tick instead of on success thresholds. A stage can also set `tm_obstacles` and `tm_robots` to switch the envs' task modes at their next episode reset, for example from `random` to `scenario` with each env's scenario taken from its `env_launch_args` entry (`task.scenario.file:=<name>`). A task mode set on one stage has to be set on every stage.
+
 `arena train` is sugar for `arena feature training launch ...`. You can visualize the running simulation via `arena viz --all`.
 
 See [`arena_bringup`](../arena_bringup) for all available launch arguments. For agent, observation space, reward and curriculum configuration refer to the [rosnav_rl README](deps/rosnav_rl/README.md).
