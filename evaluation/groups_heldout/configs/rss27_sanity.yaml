@@ -1,0 +1,4 @@
+launch: {lockstep: true}
+stages:
+- {name: sanity_empty, map: map_empty, robot: jackal, tm_robots: random, tm_obstacles: random, episodes: 6, seed: 29000, timeout: 60s, config: {random: {static: {min: 0, max: 0}, dynamic: {min: 0, max: 0}, interactive: {min: 0, max: 0}}}}
+- {name: sanity_stage3, map: hospital_1_bare, robot: jackal, tm_robots: random, tm_obstacles: random, episodes: 6, seed: 29100, timeout: 60s, config: {random: {static: {min: 3, max: 5, models: [Hospital/SM_Chair_01a, Hospital/SM_BedSideTable_01b, Hospital/SM_TrashCan, Hospital/IV_Stand]}, dynamic: {min: 1, max: 3, models: [Common/Human/arenian]}, interactive: {min: 0, max: 0}}, humansim: {local_planner: sfm}}}
