@@ -2,6 +2,7 @@
 
 Episodes are paired across arms by (split, seed index): every arm ran the same stage seeds in the same order.
 Per split the bootstrap resamples episodes; the pooled row resamples whole splits (stats.py cluster bootstrap).
+The differences are sorted first: paired_differences returns rows in no fixed order and the seeded draws depend on it.
 """
 
 import argparse
@@ -58,7 +59,7 @@ def fmt(r: dict) -> str:
 
 
 def deltas(df: pl.DataFrame, metric: str, treatment: str, control: str) -> tuple[dict, dict]:
-    d = paired_differences(df, cell=["split"], metric=metric, arm="arm", treatment=treatment, control=control, scenario="seed", seed="rep")
+    d = paired_differences(df, cell=["split"], metric=metric, arm="arm", treatment=treatment, control=control, scenario="seed", seed="rep").sort("split", "seed")
     per_split = summarize_family(d, cell=["split"], scenario="seed") if d.height else pl.DataFrame()
     pooled = summarize_family(d.with_columns(pl.lit("all").alias("cell")), cell=["cell"], scenario="split") if d.height else pl.DataFrame()
     return ({r["split"]: r for r in per_split.to_dicts()}, pooled.to_dicts()[0] if pooled.height else None)
