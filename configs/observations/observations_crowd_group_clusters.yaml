@@ -1,0 +1,77 @@
+# The bundled rosnav_rl observations with the group input taken from proximity clusters instead of the simulator labels (clustering control).
+aliases:
+  robot_pose: robot_pose_from_tf
+  people_data: people_detections
+  arena_people_data: arena_pedestrian_detections
+  pedestrian_relative_locations: arena_pedestrian_relative_locations
+  pedestrian_relative_velocities: arena_pedestrian_relative_velocities
+  pedestrian_social_states: arena_pedestrian_states
+  crowd_group: crowd_group_clusters
+datasources:
+  robot_pose_from_tf:
+    type: RobotPoseTFGenerator
+    params: {}
+  front_laser:
+    type: sensor_msgs/LaserScan
+    params:
+      topic: lidar
+      up_to_date_required: true
+  goal_pose:
+    type: geometry_msgs/PoseStamped
+    params:
+      topic: goal_pose
+      up_to_date_required: false
+  subgoal_pose:
+    type: StraightLineSubgoalGenerator
+  last_action:
+    type: geometry_msgs/Twist
+    params:
+      topic: cmd_vel
+  robot_twist:
+    type: OdometryTwistCollector
+    params:
+      topic: odom
+      up_to_date_required: false
+  arena_pedestrian_detections:
+    type: arena_people_msgs/Pedestrians
+    params:
+      topic: arena_peds
+      up_to_date_required: false
+  collision_monitor:
+    type: nav2_msgs/CollisionMonitorState
+    params:
+      topic: collision_monitor_state
+      state_key: StopPolygon
+  goal_in_robot_frame:
+    type: GoalLocationInRobotFrameGenerator
+  subgoal_in_robot_frame:
+    type: SubgoalLocationInRobotFrameGenerator
+  dist_angle_to_goal:
+    type: DistAngleToGoalGenerator
+  dist_angle_to_subgoal:
+    type: DistAngleToSubgoalGenerator
+  laser_safety_violation:
+    type: LaserSafeDistanceGenerator
+  pedestrian_vel_x:
+    type: PedestrianRelativeVelXGenerator
+  pedestrian_vel_y:
+    type: PedestrianRelativeVelYGenerator
+  arena_pedestrian_relative_locations:
+    type: ArenaPedestrianRelativeLocationGenerator
+  arena_pedestrian_relative_velocities:
+    type: ArenaPedestrianRelativeVelGenerator
+  pedestrian_distances:
+    type: ArenaPedestrianTypeDistanceGenerator
+  pedestrian_types:
+    type: ArenaPedestrianTypeGenerator
+  arena_pedestrian_states:
+    type: ArenaPedestrianStateGenerator
+  crowd_ttc:
+    type: CrowdTimeToContactGenerator
+  crowd_group_labels:
+    type: CrowdGroupGenerator
+  crowd_group_clusters:
+    type: CrowdGroupClusterGenerator
+    params:
+      distance: 1.5
+      velocity_tolerance: 0.5
