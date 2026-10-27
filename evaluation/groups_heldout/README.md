@@ -10,6 +10,8 @@ Tools behind the held-out comparison of AGENT_5, AGENT_5_GROUPS with simulator l
 | `eval_agent.sh <agents_dir> <agent> <tick>` | Makes `<agent>_t<tick/1000>k/` with `tick_<tick>.zip` copied as `best_model.zip` (the rosnav_rl driver always loads `best_model.zip`). |
 | `make_traineval.py` | Resumes a checkpoint in the training env and runs one deterministic in-training eval with no PPO update. Used to rule out the benchmark driver. Run with `arena train` on its own ROS domain, never with `train_arm.sh`. |
 | `readout.py` | Means per arm and labels-minus-control deltas with bootstrap intervals (arena_evaluation `experiments/stats.py`), per split and pooled, plus the verdict. |
+| `figures.py <fig>` | Report figures from the benchmark runs, episode recordings and training logs: `heldout`, `trajectories`, `training`, `oscillation`. Each is written as PDF, PNG and a CSV of the plotted numbers. |
+| `offline_last_action.py <agent_dir>` | Offline last-action test: the checkpoint's mean action in a kinematic unicycle with rosnav-rl's own encoding, with the last-action input real, delayed one step or zero. |
 | `configs/rss27_sanity.yaml` | Sanity suite (empty map and stage-3-like tasks) for the checks; its contests and the default-planner contest were written by hand. |
 | `heldout_layouts.png` | Start, goal, groups and walking routes of the three families. |
 
